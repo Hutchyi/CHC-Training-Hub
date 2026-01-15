@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHC Training Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --chc-blue: #1a2744;
+            --chc-blue-dark: #0f1a2e;
+            --chc-red: #c41e3a;
+            --chc-orange: #e67e22;
+            --chc-green: #27ae60;
+            --chc-yellow: #f1c40f;
+            --chc-purple: #8e44ad;
+            --chc-cyan: #17a2b8;
+            --text-light: #ffffff;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: linear-gradient(135deg, var(--chc-blue-dark) 0%, var(--chc-blue) 50%, #1e3a5f 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            /* Removed overflow: hidden to allow scrolling */
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 30px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--chc-red);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 200px;
+            height: 3px;
+            background: var(--chc-blue);
+        }
+
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .logo-subtitle {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--text-muted);
+            letter-spacing: 4px;
+        }
+
+        .header-info {
+            text-align: right;
+        }
+
+        .current-date {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .last-updated {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--chc-green);
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.error {
+            background: var(--chc-red);
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Week Grid */
+        .week-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title.this-week {
+            color: var(--chc-orange);
+        }
+
+        .section-title.next-week {
+            color: var(--chc-cyan);
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--card-border), transparent);
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            flex: 1;
+            min-height: 250px;
+        }
+
+        .day-column {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .day-header {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .day-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .day-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .day-header.today {
+            background: var(--chc-red);
+        }
+
+        .day-header.today .day-date {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .day-courses {
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+        }
+
+        /* Course Cards */
+        .course-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 4px solid var(--chc-orange);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .course-card:hover {
+            transform: translateX(3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .course-card.csr { border-left-color: var(--chc-green); }
+        .course-card.smsts { border-left-color: var(--chc-orange); }
+        .course-card.sssts { border-left-color: var(--chc-yellow); }
+        .course-card.iosh { border-left-color: var(--chc-purple); }
+        .course-card.twc { border-left-color: var(--chc-cyan); }
+        .course-card.first-aid { border-left-color: var(--chc-red); }
+        .course-card.manual { border-left-color: #e91e63; }
+        .course-card.abrasive { border-left-color: #795548; }
+        .course-card.nvq { border-left-color: #607d8b; }
+
+        .course-type {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .course-type .day-indicator {
+            font-size: 0.7rem;
+            background: rgba(255,255,255,0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .course-type .location-badge {
+            font-size: 0.65rem;
+            background: rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .course-type .location-badge.zoom {
+            background: rgba(45, 140, 255, 0.3);
+            color: #7cb8ff;
+        }
+
+        .course-type .location-badge.meet393 {
+            background: rgba(39, 174, 96, 0.3);
+            color: #6fd98f;
+        }
+
+        .course-client {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .client-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            object-fit: contain;
+            background: white;
+            padding: 2px;
+        }
+
+        .course-trainer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .trainer-photo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+
+        .trainer-photo img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .trainer-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .no-courses {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-header.orange { background: var(--chc-orange); }
+        .sidebar-header.green { background: var(--chc-green); }
+        .sidebar-header.blue { background: #3498db; }
+
+        .sidebar-content {
+            padding: 15px;
+        }
+
+        /* Next Week Preview */
+        .next-week-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .next-week-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+        }
+
+        .next-week-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .next-week-dot.csr { background: var(--chc-green); }
+        .next-week-dot.smsts { background: var(--chc-orange); }
+        .next-week-dot.sssts { background: var(--chc-yellow); }
+        .next-week-dot.iosh { background: var(--chc-purple); }
+        .next-week-dot.twc { background: var(--chc-cyan); }
+        .next-week-dot.first-aid { background: var(--chc-red); }
+
+        .next-week-text {
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        .next-week-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
+            color: var(--chc-orange);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+
+        /* Scrollbar styling */
+        .day-courses::-webkit-scrollbar,
+        .next-week-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .day-courses::-webkit-scrollbar-track,
+        .next-week-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .day-courses::-webkit-scrollbar-thumb,
+        .next-week-list::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .course-card {
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        .day-column:nth-child(1) .course-card { animation-delay: 0.1s; }
+        .day-column:nth-child(2) .course-card { animation-delay: 0.2s; }
+        .day-column:nth-child(3) .course-card { animation-delay: 0.3s; }
+        .day-column:nth-child(4) .course-card { animation-delay: 0.4s; }
+        .day-column:nth-child(5) .course-card { animation-delay: 0.5s; }
+
+        /* Refresh indicator */
+        .refresh-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--chc-green);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .refresh-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .refresh-indicator.error {
+            background: var(--chc-red);
+        }
+
+        /* Loading state */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--card-border);
+            border-top-color: var(--chc-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .footer .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .footer .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            padding: 6px 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+        }
+
+        .footer .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .stat-pill-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--chc-orange);
+        }
+
+        .stat-pill-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="refresh-indicator" id="refreshIndicator">
+        ✓ Data refreshed
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-text">CHC</span>
+                <span class="logo-subtitle">TRAINING HUB</span>
+            </div>
+            <div class="header-info">
+                <div class="current-date" id="currentDate">Loading...</div>
+                <div class="last-updated">Updated: <span id="lastUpdated">--:--</span></div>
+                <div class="connection-status">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText">Connecting...</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="week-section">
+                <h2 class="section-title this-week">This Week</h2>
+                <div class="week-grid" id="thisWeekGrid">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h2 class="section-title next-week">Next Week</h2>
+                <div class="week-grid" id="nextWeekGrid">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--chc-green);"></div>
+                    <span>CSR</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--chc-orange);"></div>
+                    <span>SMSTS</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--chc-yellow);"></div>
+                    <span>SSSTS</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--chc-purple);"></div>
+                    <span>IOSH</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--chc-cyan);"></div>
+                    <span>TWC</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--chc-red);"></div>
+                    <span>First Aid</span>
+                </div>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-pill">
+                    <span class="stat-pill-number" id="totalCourses">-</span>
+                    <span class="stat-pill-label">This Week</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-pill-number" id="nextWeekCourses">-</span>
+                    <span class="stat-pill-label">Next Week</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-pill-number" id="totalTrainers">-</span>
+                    <span class="stat-pill-label">Trainers</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - EDIT THESE VALUES
+        // ============================================
+        
+        /*
+         * CALENDAR URL SETUP:
+         * 
+         * To get your ICS URL from Microsoft 365:
+         * 1. Go to Outlook on the web (outlook.office.com)
+         * 2. Click Settings (gear icon) → View all Outlook settings
+         * 3. Go to Calendar → Shared calendars
+         * 4. Under "Publish a calendar", select your training calendar
+         * 5. Select "Can view all details"
+         * 6. Click "Publish"
+         * 7. Copy the ICS link (ends in .ics)
+         * 
+         * Paste the ICS URL below:
+         */
+        const CALENDAR_ICS_URL = 'https://outlook.office365.com/owa/calendar/59b735ab2c254f078b98f3cd74e366b6@chcni.com/f6e1eef0f71d4be3ada7f46913727fca8078110199798647435/calendar.ics';
+        
+        // Refresh interval in milliseconds (1 hour = 3600000, 30 min = 1800000)
+        const REFRESH_INTERVAL = 3600000;
+
+        /*
+         * NAMING FORMAT FOR CALENDAR EVENTS:
+         * 
+         * Use this format for your calendar entries:
+         * 
+         *   COURSE - CLIENT - LOCATION - TRAINER
+         * 
+         * Examples:
+         *   CSR - CAFRE - Zoom - DH
+         *   SMSTS Day 1 - PSNI - 393 - AB
+         *   SMSTS Day 2 - PSNI - 393 - LMF
+         *   2 Day TWCTC - Tilbury Douglas - On-site - WL
+         *   SSS Refresher - Open - Meet@393 - CH
+         *   IOSH Day 3/4 - Farrans - Zoom - DB1
+         * 
+         * Multi-day courses: Add "Day X" or "Day X/Y" to the course name
+         * Location keywords: Zoom, Meet@393, 393, On-site, or client name
+         * Trainer: Use initials (DH, AB, LMF, etc.)
+         */
+
+        // ============================================
+        // TRAINER INFORMATION
+        // Add/edit trainers here. Set 'photo' to the filename in your images folder
+        // ============================================
+        const TRAINERS = {
+            'DH':  { name: 'David Hutchison',   initials: 'DH',  photo: 'trainers/DH.jpg' },
+            'LMF': { name: 'Lesley MacFarlane', initials: 'LMF', photo: 'trainers/LMF.jpg' },
+            'AB':  { name: 'Anita Ballard',     initials: 'AB',  photo: 'trainers/AB.jpg' },
+            'DB2': { name: 'Damien Brennan',    initials: 'DB2', photo: 'trainers/DB2.jpg' },
+            'DB1': { name: 'Dessie Black',      initials: 'DB1', photo: 'trainers/DB1.jpg' },
+            'WL':  { name: 'William Love',      initials: 'WL',  photo: 'trainers/WL.jpg' },
+            'CH':  { name: 'Charlie Hutchison', initials: 'CH',  photo: 'trainers/CH.jpg' },
+            'LM':  { name: 'Lynette Mite',      initials: 'LM',  photo: 'trainers/LM.jpg' }
+            // Add more trainers as needed:
+            // 'XX': { name: 'Full Name', initials: 'XX', photo: 'trainers/XX.jpg' },
+        };
+
+        // ============================================
+        // CLIENT LOGOS
+        // Map client names to logo files. Use partial matches.
+        // ============================================
+        const CLIENT_LOGOS = {
+            'PSNI':              'logos/PSNI.jpg',
+            'CAFRE':             'logos/cafre.png',
+            'Belfast Met':       'logos/belfast-met.png',
+            'Farrans':           'logos/farrans.png',
+            'Graham':            'logos/graham.png',
+            'Tilbury':           'logos/tilbury-douglas.png',
+            'McLaughlin':        'logos/mclaughlin-harvey.png',
+            // Add more clients as needed:
+            // 'Client Name':    'logos/filename.png',
+        };
+
+        // ============================================
+        // COURSE TYPE STYLING
+        // ============================================
+        const COURSE_TYPES = {
+            'CSR':       'csr',
+            'SMSTS':     'smsts',
+            'SSSTS':     'sssts',
+            'SSSTS-R':   'sssts',
+            'SMSTS-R':   'smsts',
+            'SSS':       'sssts',
+            'IOSH':      'iosh',
+            'TWC':       'twc',
+            'TWCTC':     'twc',
+            'TWS':       'twc',
+            'TWC-R':     'twc',
+            'FIRST AID': 'first-aid',
+            'FIRSTAID':  'first-aid',
+            'MANUAL':    'manual',
+            'ABRASIVE':  'abrasive',
+            'NVQ':       'nvq'
+        };
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+
+        function getMonday(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
+        function formatDate(date) {
+            return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+        }
+
+        function formatFullDate(date) {
+            return date.toLocaleDateString('en-GB', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+        }
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-GB', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        function isSameDay(date1, date2) {
+            return date1.toDateString() === date2.toDateString();
+        }
+
+        function getCourseClass(courseName) {
+            const upper = courseName.toUpperCase();
+            for (const [key, value] of Object.entries(COURSE_TYPES)) {
+                if (upper.includes(key)) {
+                    return value;
+                }
+            }
+            return 'csr'; // default
+        }
+
+        function getClientLogo(clientName) {
+            if (!clientName) return null;
+            const upper = clientName.toUpperCase();
+            for (const [key, path] of Object.entries(CLIENT_LOGOS)) {
+                if (upper.includes(key.toUpperCase())) {
+                    return path;
+                }
+            }
+            return null;
+        }
+
+        // ============================================
+        // EVENT PARSING
+        // ============================================
+
+        function parseEventSummary(summary) {
+            // Format: COURSE - CLIENT - LOCATION - TRAINER
+            // Or:     COURSE - CLIENT - TRAINER (location optional)
+            
+            const parts = summary.split(' - ').map(p => p.trim());
+            
+            let course = parts[0] || summary;
+            let client = '';
+            let location = '';
+            let trainer = '';
+            let dayNum = null;
+            let totalDays = null;
+
+            // Parse based on number of parts
+            if (parts.length >= 4) {
+                // Full format: COURSE - CLIENT - LOCATION - TRAINER
+                client = parts[1];
+                location = parts[2];
+                trainer = parts[3];
+            } else if (parts.length === 3) {
+                // Could be COURSE - CLIENT - TRAINER or COURSE - LOCATION - TRAINER
+                const lastPart = parts[2].toUpperCase();
+                // Check if middle part looks like a location
+                if (['ZOOM', 'MEET@393', '393', 'ON-SITE', 'ONSITE'].some(loc => parts[1].toUpperCase().includes(loc))) {
+                    location = parts[1];
+                    trainer = parts[2];
+                } else {
+                    client = parts[1];
+                    trainer = parts[2];
+                }
+            } else if (parts.length === 2) {
+                // COURSE - TRAINER
+                trainer = parts[1];
+            }
+
+            // Extract day number from course name
+            // Patterns: "Day 1", "Day 2/5", "Day 1 of 5", "D1", "Day1"
+            const dayPatterns = [
+                /Day\s*(\d+)\s*(?:\/|of)\s*(\d+)/i,  // Day 1/5 or Day 1 of 5
+                /Day\s*(\d+)/i,                       // Day 1
+                /D(\d+)(?:\/(\d+))?/i                 // D1 or D1/5
+            ];
+
+            for (const pattern of dayPatterns) {
+                const match = course.match(pattern);
+                if (match) {
+                    dayNum = match[1];
+                    totalDays = match[2] || null;
+                    break;
+                }
+            }
+
+            // Extract duration from course name (e.g., "2 Day TWCTC")
+            const durationMatch = course.match(/(\d+)\s*Day/i);
+            if (durationMatch && !totalDays) {
+                totalDays = durationMatch[1];
+            }
+
+            // Extract location from course name if not found in parts
+            if (!location) {
+                if (course.toUpperCase().includes('ZOOM')) {
+                    location = 'Zoom';
+                } else if (course.toUpperCase().includes('MEET@393') || course.toUpperCase().includes('MEET @393')) {
+                    location = 'Meet@393';
+                }
+            }
+
+            // Clean up trainer initials
+            trainer = trainer.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+            return {
+                course: cleanCourseName(course),
+                client,
+                location,
+                trainer,
+                dayNum,
+                totalDays
+            };
+        }
+
+        function cleanCourseName(name) {
+            // Remove day indicators and duration for cleaner display
+            return name
+                .replace(/\s*Day\s*\d+\s*(?:\/|of)\s*\d+/i, '')
+                .replace(/\s*Day\s*\d+/i, '')
+                .replace(/\s*D\d+(?:\/\d+)?/i, '')
+                .replace(/^\d+\s*Day\s+/i, '')
+                .replace(/\s*-\s*Zoom/i, '')
+                .replace(/\s*-\s*Meet@393/i, '')
+                .replace(/\s*MEET@393/i, '')
+                .trim();
+        }
+
+        // ============================================
+        // ICS PARSING
+        // ============================================
+
+        async function fetchCalendarData() {
+            if (CALENDAR_ICS_URL === 'YOUR_ICS_URL_HERE') {
+                console.log('Using sample data - replace CALENDAR_ICS_URL with your ICS link');
+                updateStatus(true, 'Demo mode');
+                return getSampleData();
+            }
+
+            // Try multiple CORS proxies in case one is down
+            const corsProxies = [
+                (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+                (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+                (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
+            ];
+
+            for (const proxyFn of corsProxies) {
+                try {
+                    const proxyUrl = proxyFn(CALENDAR_ICS_URL);
+                    console.log('Trying proxy:', proxyUrl);
+                    const response = await fetch(proxyUrl);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error: ${response.status}`);
+                    }
+                    
+                    const icsText = await response.text();
+                    
+                    // Check if we got valid ICS data
+                    if (!icsText.includes('BEGIN:VCALENDAR')) {
+                        throw new Error('Invalid ICS data received');
+                    }
+                    
+                    const events = parseICS(icsText);
+                    
+                    updateStatus(true, 'Live');
+                    return events;
+                } catch (error) {
+                    console.warn('Proxy failed:', error.message);
+                    continue; // Try next proxy
+                }
+            }
+            
+            // All proxies failed
+            console.error('All CORS proxies failed');
+            updateStatus(false, 'Connection error');
+            return getSampleData();
+        }
+
+        function parseICS(icsText) {
+            const events = [];
+            const lines = icsText.split(/\r?\n/);
+            let currentEvent = null;
+            let currentKey = null;
+            let currentValue = '';
+
+            for (let line of lines) {
+                // Handle line continuations (lines starting with space or tab)
+                if (line.match(/^[ \t]/) && currentKey) {
+                    currentValue += line.substring(1);
+                    continue;
+                }
+
+                // Process previous key-value pair
+                if (currentKey && currentEvent) {
+                    currentEvent[currentKey] = currentValue;
+                }
+
+                // Parse new line
+                if (line === 'BEGIN:VEVENT') {
+                    currentEvent = {};
+                    currentKey = null;
+                    currentValue = '';
+                } else if (line === 'END:VEVENT' && currentEvent) {
+                    const parsed = processICSEvent(currentEvent);
+                    if (parsed) {
+                        events.push(parsed);
+                    }
+                    currentEvent = null;
+                } else if (currentEvent) {
+                    const colonIndex = line.indexOf(':');
+                    if (colonIndex > 0) {
+                        currentKey = line.substring(0, colonIndex).split(';')[0];
+                        currentValue = line.substring(colonIndex + 1);
+                    }
+                }
+            }
+
+            return events;
+        }
+
+        function processICSEvent(event) {
+            const summary = event.SUMMARY || '';
+            const dtstart = event.DTSTART || '';
+            
+            if (!summary || !dtstart) return null;
+
+            // Parse date
+            let date;
+            if (dtstart.includes('T')) {
+                // DateTime format: 20240115T090000 or 20240115T090000Z
+                const dateStr = dtstart.replace('Z', '');
+                date = new Date(
+                    parseInt(dateStr.substring(0, 4)),
+                    parseInt(dateStr.substring(4, 6)) - 1,
+                    parseInt(dateStr.substring(6, 8))
+                );
+            } else {
+                // Date only format: 20240115
+                date = new Date(
+                    parseInt(dtstart.substring(0, 4)),
+                    parseInt(dtstart.substring(4, 6)) - 1,
+                    parseInt(dtstart.substring(6, 8))
+                );
+            }
+
+            // Parse summary
+            const parsed = parseEventSummary(summary);
+
+            return {
+                date,
+                ...parsed
+            };
+        }
+
+        // ============================================
+        // SAMPLE DATA (for testing without calendar)
+        // ============================================
+        
+        function getSampleData() {
+            const today = new Date();
+            const monday = getMonday(today);
+            
+            return [
+                // This week
+                { date: addDays(monday, 0), course: 'CSR', client: 'CAFRE', location: 'Zoom', trainer: 'DH', dayNum: null, totalDays: null },
+                { date: addDays(monday, 0), course: 'SMSTS', client: 'PSNI', location: '393', trainer: 'AB', dayNum: '1', totalDays: '5' },
+                { date: addDays(monday, 1), course: 'SMSTS', client: 'PSNI', location: '393', trainer: 'AB', dayNum: '2', totalDays: '5' },
+                { date: addDays(monday, 1), course: 'TWCTC', client: 'Tilbury Douglas', location: 'On-site', trainer: 'WL', dayNum: '1', totalDays: '2' },
+                { date: addDays(monday, 2), course: 'SMSTS', client: 'PSNI', location: '393', trainer: 'LMF', dayNum: '3', totalDays: '5' },
+                { date: addDays(monday, 2), course: 'TWCTC', client: 'Tilbury Douglas', location: 'On-site', trainer: 'WL', dayNum: '2', totalDays: '2' },
+                { date: addDays(monday, 2), course: 'CSR', client: 'Belfast Met', location: 'Zoom', trainer: 'DH', dayNum: null, totalDays: null },
+                { date: addDays(monday, 3), course: 'SMSTS', client: 'PSNI', location: '393', trainer: 'LMF', dayNum: '4', totalDays: '5' },
+                { date: addDays(monday, 3), course: 'IOSH', client: 'Farrans', location: 'Zoom', trainer: 'DB1', dayNum: '1', totalDays: '4' },
+                { date: addDays(monday, 4), course: 'SMSTS', client: 'PSNI', location: '393', trainer: 'LMF', dayNum: '5', totalDays: '5' },
+                { date: addDays(monday, 4), course: 'IOSH', client: 'Farrans', location: 'Zoom', trainer: 'DB1', dayNum: '2', totalDays: '4' },
+                { date: addDays(monday, 4), course: 'SSS Refresher', client: 'Open', location: 'Meet@393', trainer: 'CH', dayNum: null, totalDays: null },
+                
+                // Next week
+                { date: addDays(monday, 7), course: 'CSR', client: 'Derry Office', location: 'On-site', trainer: 'AB', dayNum: null, totalDays: null },
+                { date: addDays(monday, 7), course: 'IOSH', client: 'Farrans', location: 'Zoom', trainer: 'DB1', dayNum: '3', totalDays: '4' },
+                { date: addDays(monday, 8), course: 'IOSH', client: 'Farrans', location: 'Zoom', trainer: 'DB1', dayNum: '4', totalDays: '4' },
+                { date: addDays(monday, 8), course: 'SSSTS', client: 'Graham Construction', location: '393', trainer: 'DH', dayNum: '1', totalDays: '2' },
+                { date: addDays(monday, 9), course: 'SSSTS', client: 'Graham Construction', location: '393', trainer: 'DH', dayNum: '2', totalDays: '2' },
+                { date: addDays(monday, 10), course: 'First Aid', client: 'CIYMS', location: '393', trainer: 'LM', dayNum: null, totalDays: null },
+                { date: addDays(monday, 11), course: 'CSR', client: 'Cork Office', location: 'On-site', trainer: 'WL', dayNum: null, totalDays: null },
+            ];
+        }
+
+        // ============================================
+        // RENDERING FUNCTIONS
+        // ============================================
+
+        function renderThisWeek(events) {
+            const grid = document.getElementById('thisWeekGrid');
+            const today = new Date();
+            const monday = getMonday(today);
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+            let html = '';
+            let totalCourses = 0;
+            let trainersSet = new Set();
+
+            days.forEach((dayName, index) => {
+                const dayDate = addDays(monday, index);
+                const isToday = isSameDay(dayDate, today);
+                const dayEvents = events.filter(e => isSameDay(e.date, dayDate));
+
+                totalCourses += dayEvents.length;
+                dayEvents.forEach(e => {
+                    if (e.trainer) trainersSet.add(e.trainer);
+                });
+
+                html += `
+                    <div class="day-column">
+                        <div class="day-header ${isToday ? 'today' : ''}">
+                            <div class="day-name">${dayName}</div>
+                            <div class="day-date">${formatDate(dayDate)}</div>
+                        </div>
+                        <div class="day-courses">
+                            ${dayEvents.length > 0 ? 
+                                dayEvents.map(event => renderCourseCard(event)).join('') :
+                                '<div class="no-courses">No courses</div>'
+                            }
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+
+            // Update stats
+            document.getElementById('totalCourses').textContent = totalCourses;
+            
+            return trainersSet;
+        }
+
+        function renderCourseCard(event) {
+            const courseClass = getCourseClass(event.course);
+            const trainer = TRAINERS[event.trainer] || { name: event.trainer || 'TBC', initials: event.trainer || '?' };
+            const clientLogo = getClientLogo(event.client);
+
+            // Day indicator
+            let dayIndicator = '';
+            if (event.dayNum) {
+                if (event.totalDays) {
+                    dayIndicator = `<span class="day-indicator">Day ${event.dayNum}/${event.totalDays}</span>`;
+                } else {
+                    dayIndicator = `<span class="day-indicator">Day ${event.dayNum}</span>`;
+                }
+            }
+
+            // Location badge
+            let locationBadge = '';
+            if (event.location) {
+                const locUpper = event.location.toUpperCase();
+                if (locUpper.includes('ZOOM')) {
+                    locationBadge = '<span class="location-badge zoom">Zoom</span>';
+                } else if (locUpper.includes('MEET@393') || locUpper === '393') {
+                    locationBadge = '<span class="location-badge meet393">@393</span>';
+                } else if (locUpper.includes('ON-SITE') || locUpper.includes('ONSITE')) {
+                    locationBadge = '<span class="location-badge">On-site</span>';
+                }
+            }
+
+            // Client with optional logo
+            const clientHtml = clientLogo 
+                ? `<img class="client-logo" src="${clientLogo}" alt="" onerror="this.style.display='none'">${event.client}`
+                : event.client;
+
+            // Trainer photo
+            const trainerPhoto = trainer.photo 
+                ? `<img src="${trainer.photo}" alt="${trainer.name}" onerror="this.parentElement.innerHTML='${trainer.initials}'">`
+                : trainer.initials;
+
+            return `
+                <div class="course-card ${courseClass}">
+                    <div class="course-type">
+                        ${event.course}
+                        ${dayIndicator}
+                        ${locationBadge}
+                    </div>
+                    <div class="course-client">${clientHtml}</div>
+                    <div class="course-trainer">
+                        <div class="trainer-photo">
+                            ${trainerPhoto}
+                        </div>
+                        <span class="trainer-name">${trainer.name}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderNextWeek(events) {
+            const grid = document.getElementById('nextWeekGrid');
+            const today = new Date();
+            const monday = getMonday(today);
+            const nextMonday = addDays(monday, 7);
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+            let html = '';
+            let totalCourses = 0;
+            let trainersSet = new Set();
+
+            days.forEach((dayName, index) => {
+                const dayDate = addDays(nextMonday, index);
+                const dayEvents = events.filter(e => isSameDay(e.date, dayDate));
+
+                totalCourses += dayEvents.length;
+                dayEvents.forEach(e => {
+                    if (e.trainer) trainersSet.add(e.trainer);
+                });
+
+                html += `
+                    <div class="day-column">
+                        <div class="day-header">
+                            <div class="day-name">${dayName}</div>
+                            <div class="day-date">${formatDate(dayDate)}</div>
+                        </div>
+                        <div class="day-courses">
+                            ${dayEvents.length > 0 ? 
+                                dayEvents.map(event => renderCourseCard(event)).join('') :
+                                '<div class="no-courses">No courses</div>'
+                            }
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+
+            // Update next week stats
+            document.getElementById('nextWeekCourses').textContent = totalCourses;
+            
+            return trainersSet;
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('currentDate').textContent = formatFullDate(now);
+            document.getElementById('lastUpdated').textContent = formatTime(now);
+        }
+
+        function updateStatus(isConnected, message) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            
+            dot.className = 'status-dot' + (isConnected ? '' : ' error');
+            text.textContent = message;
+        }
+
+        function showRefreshIndicator(isError = false) {
+            const indicator = document.getElementById('refreshIndicator');
+            indicator.textContent = isError ? '✗ Refresh failed' : '✓ Data refreshed';
+            indicator.className = 'refresh-indicator show' + (isError ? ' error' : '');
+            
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 3000);
+        }
+
+        // ============================================
+        // MAIN INITIALIZATION
+        // ============================================
+
+        async function refreshData() {
+            console.log('Refreshing calendar data...');
+            try {
+                const events = await fetchCalendarData();
+                const thisWeekTrainers = renderThisWeek(events);
+                const nextWeekTrainers = renderNextWeek(events);
+                
+                // Combine trainers from both weeks
+                const allTrainers = new Set([...thisWeekTrainers, ...nextWeekTrainers]);
+                document.getElementById('totalTrainers').textContent = allTrainers.size;
+                
+                updateDateTime();
+                showRefreshIndicator(false);
+            } catch (error) {
+                console.error('Refresh failed:', error);
+                showRefreshIndicator(true);
+            }
+        }
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDateTime();
+            refreshData();
+            
+            // Set up auto-refresh
+            setInterval(refreshData, REFRESH_INTERVAL);
+            
+            // Update time every minute
+            setInterval(updateDateTime, 60000);
+        });
+
+        // Manual refresh with F5 or button
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F5') {
+                e.preventDefault();
+                refreshData();
+            }
+        });
+    </script>
+</body>
+</html>
