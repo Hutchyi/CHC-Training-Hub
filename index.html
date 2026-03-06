@@ -130,6 +130,49 @@
             50% { opacity: 0.5; }
         }
 
+        /* Top Info Bar (Legend + Stats) */
+        .top-info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 14px 20px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .top-info-bar .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .top-info-bar .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 8px;
+        }
+
+        .top-info-bar .legend-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .top-info-bar .stats-bar {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
         /* Main Content */
         .main-content {
             flex: 1;
@@ -228,7 +271,7 @@
             background: rgba(0, 0, 0, 0.3);
             border-radius: 8px;
             padding: 12px;
-            border-left: 4px solid var(--chc-orange);
+            border-left: 5px solid var(--chc-orange);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
@@ -237,15 +280,20 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .course-card.csr { border-left-color: var(--chc-green); }
-        .course-card.smsts { border-left-color: var(--chc-orange); }
-        .course-card.sssts { border-left-color: var(--chc-yellow); }
-        .course-card.iosh { border-left-color: var(--chc-purple); }
-        .course-card.twc { border-left-color: var(--chc-cyan); }
-        .course-card.first-aid { border-left-color: var(--chc-red); }
-        .course-card.manual { border-left-color: #e91e63; }
-        .course-card.abrasive { border-left-color: #795548; }
-        .course-card.nvq { border-left-color: #607d8b; }
+        .course-card.csr { border-left-color: var(--chc-green); background: rgba(39, 174, 96, 0.2); border-top: 1px solid rgba(39, 174, 96, 0.3); border-right: 1px solid rgba(39, 174, 96, 0.15); border-bottom: 1px solid rgba(39, 174, 96, 0.15); }
+        .course-card.smsts { border-left-color: var(--chc-orange); background: rgba(230, 126, 34, 0.2); border-top: 1px solid rgba(230, 126, 34, 0.3); border-right: 1px solid rgba(230, 126, 34, 0.15); border-bottom: 1px solid rgba(230, 126, 34, 0.15); }
+        .course-card.sssts { border-left-color: var(--chc-yellow); background: rgba(241, 196, 15, 0.18); border-top: 1px solid rgba(241, 196, 15, 0.3); border-right: 1px solid rgba(241, 196, 15, 0.15); border-bottom: 1px solid rgba(241, 196, 15, 0.15); }
+        .course-card.iosh { border-left-color: var(--chc-purple); background: rgba(142, 68, 173, 0.2); border-top: 1px solid rgba(142, 68, 173, 0.3); border-right: 1px solid rgba(142, 68, 173, 0.15); border-bottom: 1px solid rgba(142, 68, 173, 0.15); }
+        .course-card.twc { border-left-color: var(--chc-cyan); background: rgba(23, 162, 184, 0.2); border-top: 1px solid rgba(23, 162, 184, 0.3); border-right: 1px solid rgba(23, 162, 184, 0.15); border-bottom: 1px solid rgba(23, 162, 184, 0.15); }
+        .course-card.first-aid { border-left-color: var(--chc-red); background: rgba(196, 30, 58, 0.2); border-top: 1px solid rgba(196, 30, 58, 0.3); border-right: 1px solid rgba(196, 30, 58, 0.15); border-bottom: 1px solid rgba(196, 30, 58, 0.15); }
+        .course-card.manual { border-left-color: #e91e63; background: rgba(233, 30, 99, 0.2); border-top: 1px solid rgba(233, 30, 99, 0.3); border-right: 1px solid rgba(233, 30, 99, 0.15); border-bottom: 1px solid rgba(233, 30, 99, 0.15); }
+        .course-card.abrasive { border-left-color: #795548; background: rgba(121, 85, 72, 0.2); border-top: 1px solid rgba(121, 85, 72, 0.3); border-right: 1px solid rgba(121, 85, 72, 0.15); border-bottom: 1px solid rgba(121, 85, 72, 0.15); }
+        .course-card.nvq { border-left-color: #607d8b; background: rgba(96, 125, 139, 0.2); border-top: 1px solid rgba(96, 125, 139, 0.3); border-right: 1px solid rgba(96, 125, 139, 0.15); border-bottom: 1px solid rgba(96, 125, 139, 0.15); }
+        .course-card.ukata { border-left-color: #ff7043; background: rgba(255, 112, 67, 0.2); border-top: 1px solid rgba(255, 112, 67, 0.3); border-right: 1px solid rgba(255, 112, 67, 0.15); border-bottom: 1px solid rgba(255, 112, 67, 0.15); }
+        .course-card.rsua { border-left-color: #42a5f5; background: rgba(66, 165, 245, 0.2); border-top: 1px solid rgba(66, 165, 245, 0.3); border-right: 1px solid rgba(66, 165, 245, 0.15); border-bottom: 1px solid rgba(66, 165, 245, 0.15); }
+        .course-card.face-fit { border-left-color: #26a69a; background: rgba(38, 166, 154, 0.2); border-top: 1px solid rgba(38, 166, 154, 0.3); border-right: 1px solid rgba(38, 166, 154, 0.15); border-bottom: 1px solid rgba(38, 166, 154, 0.15); }
+        .course-card.iosh-she { border-left-color: #ab47bc; background: rgba(171, 71, 188, 0.2); border-top: 1px solid rgba(171, 71, 188, 0.3); border-right: 1px solid rgba(171, 71, 188, 0.15); border-bottom: 1px solid rgba(171, 71, 188, 0.15); }
+        .course-card.iosh-ex { border-left-color: #7e57c2; background: rgba(126, 87, 194, 0.2); border-top: 1px solid rgba(126, 87, 194, 0.3); border-right: 1px solid rgba(126, 87, 194, 0.15); border-bottom: 1px solid rgba(126, 87, 194, 0.15); }
 
         .course-type {
             font-weight: 700;
@@ -309,15 +357,15 @@
         }
 
         .trainer-photo {
-            width: 36px;
-            height: 36px;
+            width: 43px;
+            height: 43px;
             border-radius: 50%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             flex-shrink: 0;
             border: 2px solid rgba(255,255,255,0.2);
             overflow: hidden;
@@ -635,6 +683,65 @@
             </div>
         </header>
 
+        <div class="top-info-bar">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--chc-green);"></div>
+                    <span>CSR</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--chc-orange);"></div>
+                    <span>SMSTS</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--chc-yellow);"></div>
+                    <span>SSSTS</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #ab47bc;"></div>
+                    <span>IOSH SHE</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #7e57c2;"></div>
+                    <span>IOSH EX&amp;DIR</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--chc-cyan);"></div>
+                    <span>TW</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #e91e63;"></div>
+                    <span>Manual</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #795548;"></div>
+                    <span>Abrasive</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #ff7043;"></div>
+                    <span>UKATA</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #42a5f5;"></div>
+                    <span>RSUA</span>
+                </div>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-pill">
+                    <span class="stat-pill-number" id="totalCoursesTop">-</span>
+                    <span class="stat-pill-label">This Week</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-pill-number" id="nextWeekCoursesTop">-</span>
+                    <span class="stat-pill-label">Next Week</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-pill-number" id="totalTrainersTop">-</span>
+                    <span class="stat-pill-label">Trainers</span>
+                </div>
+            </div>
+        </div>
+
         <div class="main-content">
             <div class="week-section">
                 <h2 class="section-title this-week">This Week</h2>
@@ -656,32 +763,6 @@
         </div>
 
         <footer class="footer">
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: var(--chc-green);"></div>
-                    <span>CSR</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: var(--chc-orange);"></div>
-                    <span>SMSTS</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: var(--chc-yellow);"></div>
-                    <span>SSSTS</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: var(--chc-purple);"></div>
-                    <span>IOSH</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: var(--chc-cyan);"></div>
-                    <span>TWC</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: var(--chc-red);"></div>
-                    <span>First Aid</span>
-                </div>
-            </div>
             <div class="stats-bar">
                 <div class="stat-pill">
                     <span class="stat-pill-number" id="totalCourses">-</span>
@@ -718,7 +799,7 @@
          * 
          * Paste the ICS URL below:
          */
-        const CALENDAR_ICS_URL = 'https://outlook.office365.com/owa/calendar/59b735ab2c254f078b98f3cd74e366b6@chcni.com/f6e1eef0f71d4be3ada7f46913727fca8078110199798647435/calendar.ics';
+        const CALENDAR_ICS_URL = 'https://outlook.office365.com/owa/calendar/aa12c12c2395434ba5a988afa9e9544c@chcni.com/4f8596dbdaa346b1bdf9b876190985b216468131383634568389/calendar.ics';
         
         // Refresh interval in milliseconds (1 hour = 3600000, 30 min = 1800000)
         const REFRESH_INTERVAL = 3600000;
@@ -780,21 +861,26 @@
         // COURSE TYPE STYLING
         // ============================================
         const COURSE_TYPES = {
-            'CSR':       'csr',
-            'SMSTS':     'smsts',
-            'SSSTS':     'sssts',
             'SSSTS-R':   'sssts',
             'SMSTS-R':   'smsts',
+            'SMSTS':     'smsts',
+            'SSSTS':     'sssts',
             'SSS':       'sssts',
+            'IOSH SHE':  'iosh-she',
+            'IOSH EX':   'iosh-ex',
             'IOSH':      'iosh',
-            'TWC':       'twc',
             'TWCTC':     'twc',
-            'TWS':       'twc',
             'TWC-R':     'twc',
+            'TWS':       'twc',
+            'TWC':       'twc',
             'FIRST AID': 'first-aid',
             'FIRSTAID':  'first-aid',
+            'FACE FIT':  'face-fit',
             'MANUAL':    'manual',
             'ABRASIVE':  'abrasive',
+            'UKATA':     'ukata',
+            'RSUA':      'rsua',
+            'CSR':       'csr',
             'NVQ':       'nvq'
         };
 
@@ -1162,6 +1248,7 @@
 
             // Update stats
             document.getElementById('totalCourses').textContent = totalCourses;
+            document.getElementById('totalCoursesTop').textContent = totalCourses;
             
             return trainersSet;
         }
@@ -1262,6 +1349,7 @@
 
             // Update next week stats
             document.getElementById('nextWeekCourses').textContent = totalCourses;
+            document.getElementById('nextWeekCoursesTop').textContent = totalCourses;
             
             return trainersSet;
         }
@@ -1304,6 +1392,7 @@
                 // Combine trainers from both weeks
                 const allTrainers = new Set([...thisWeekTrainers, ...nextWeekTrainers]);
                 document.getElementById('totalTrainers').textContent = allTrainers.size;
+                document.getElementById('totalTrainersTop').textContent = allTrainers.size;
                 
                 updateDateTime();
                 showRefreshIndicator(false);
